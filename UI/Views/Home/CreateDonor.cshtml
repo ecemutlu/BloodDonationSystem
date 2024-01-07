@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Create Donor";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // adjust the layout path as needed
+}
+
+<h2>@ViewBag.Title</h2>
+
+<style>
+    .column {
+        float: left;
+        width: 50%;
+    }
+</style>
+
+<form method="post" action="/Donor/Create" class="form-horizontal">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="column">
+            <img src="../Me.jpeg" width="100" height="100" />
+        </div>
+        <div class="column">
+            <div class="form-group">
+                <label class="control-label col-md-6">Donor Name:</label>
+                <div class="col-md-10">
+                    <input class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">Blood Type:</label>
+                <div class="col-md-10">
+                    <select class="form-control">
+                    <option value="" disabled selected>Select blood type</option>
+                    <option value="0+">0+</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">City:</label>
+                <div class="col-md-10">
+                    <select class="form-control">
+                        <option value="" disabled selected>Select city</option>
+                        <option value="İzmir">İzmir</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">Town:</label>
+                <div class="col-md-10">
+                    <select class="form-control">
+                        <option value="" disabled selected>Select town</option>
+                        <option value="Bornova">Bornova</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">Phone Number:</label>
+                <div class="col-md-10">
+                    <input class="form-control" />
+                </div>
+            </div>
+        </div>        
+    </div>
+    <!-- Add other donor fields here -->
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+<div>
+    <h2>Donor List</h2>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <!-- Add other donor fields as column headers -->
+            <th></th>
+        </tr>
+        <!-- Sample donor data for demonstration purposes -->
+        <tr>
+            <td>John Doe</td>
+            <!-- Add other donor fields as table data -->
+            <td>
+                <a href="#">Edit</a> |
+                <a href="#">Delete</a>
+            </td>
+        </tr>        
+    </table>
+</div>
