@@ -1,0 +1,79 @@
+﻿@{
+	ViewData["Title"] = "Add Blood";
+}
+<head>
+    <!-- Add these script tags to include jQuery and jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+</head>
+
+<div class="row">
+	<div class="col-md-4">
+		<h2>@ViewData["Title"]</h2>
+	</div>
+	<div class="col-md-4">
+		<h3>Branch Name</h3>
+	</div>
+</div>
+
+<form>
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label col-md-4">Donor Name</label> 
+            </div>
+        </div>
+        <div class="col-md-4">                             
+            <input class="form-control" id="donorName" />
+        </div>            
+    </div> 
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label col-md-4">Blood Type</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label col-md-4">Donation Date</label>
+            </div>
+        </div>
+        <div class="col-md-4">  
+            <input class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label col-md-4">Units</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" />
+        </div>
+    </div>
+</form>
+
+<script>
+    $.ajax({
+        url: 'api/Donors', // Replace with your actual endpoint
+        method: 'GET',
+        success: function (data) {            
+            $("#donorName").autocomplete({
+                source: data,
+                minLength: 1,
+            });
+        },
+        error: function (error) {
+            console.error('Error fetching donor names:', error);
+        }
+    });
+</script>
+

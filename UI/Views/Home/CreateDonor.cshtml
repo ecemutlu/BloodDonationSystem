@@ -1,10 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Create Donor";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // adjust the layout path as needed
+    ViewData["Title"] = "Create Donor";
 }
 
-<h2>@ViewBag.Title</h2>
-
+<h2>Donors-Branch Name</h2>
 <style>
     .column {
         float: left;
@@ -12,7 +10,7 @@
     }
 </style>
 
-<form method="post" action="/Donor/Create" class="form-horizontal">
+<form>
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="column">

@@ -1,15 +1,18 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using UI.Models;
+using UI.Services;
 
 namespace UI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApiClient _apiClient;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApiClient apiClient, ILogger<HomeController> logger)
         {
+            _apiClient = apiClient;
             _logger = logger;
         }
 
@@ -17,7 +20,14 @@ namespace UI.Controllers
         {
             return View();
         }
-
+        public IActionResult RequestBlood()
+        {
+            return View();
+        }
+        public IActionResult AddBlood()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
