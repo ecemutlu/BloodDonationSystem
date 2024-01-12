@@ -1,0 +1,37 @@
+﻿@using Api.Models
+@{
+	ViewData["Title"] = "Donor List";
+    var Donors = (IEnumerable<DonorDto>?)ViewData["Donor"];
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form>   
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>            
+                <th>Blood Type</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <!-- Sample donor data for demonstration purposes -->
+        <tbody>           
+            @foreach (var donor in Donors )
+            {
+                <tr>
+                    <td>@donor.Name</td>
+                    <td>@donor.BloodType</td>
+                    <td>@donor.PhoneNo</td>
+                    <td>@donor.Email</td>
+                    <td>
+                        <a href="#">Edit</a>
+                        <a href="#">Delete</a>
+                    </td>
+                </tr>
+            }                             
+        </tbody>
+    </table>
+</form>

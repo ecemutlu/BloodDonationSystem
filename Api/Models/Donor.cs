@@ -8,8 +8,7 @@ namespace Api.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public required string Name { get; set; }
-        public required string Surname { get; set; }
+        public required string Name { get; set; }        
         public string? Image { get; set; }
         [ForeignKey("City")]
         public int CityId { get; set; }

@@ -5,11 +5,8 @@ namespace Api.Models
 {
     public class TownDto
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public required string Name { get; set; }
-        [ForeignKey("City")]
+        public required string Name { get; set; }        
         public int CityId { get; set; }
     }
 }

@@ -1,33 +1,81 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Xml.Linq;
 using Api.Models;
 using UI.Dto;
 
 namespace UI.Services
 {
-    public class ApiClient
-    {
-        AuthService _authService;
-        string _apiUrl;
+	public class ApiClient
+	{
+		AuthService _authService;
+		string? _apiUrl;
 
-        public ApiClient(AuthService authService, IConfiguration configuration)
-        {
-            _authService = authService;
-            _apiUrl = configuration["ApiUrl"] ?? "";
-        }
+		public string ApiUrl { get => _apiUrl ?? ""; set => _apiUrl = value; }
 
-        public async Task<IEnumerable<DonorDto>> QueryDonors(LoginDto loginDto, string name)
-        {
-            var token = await _authService.GetTokenAsync(loginDto);
+		public ApiClient(AuthService authService, IConfiguration configuration)
+		{
+			_authService = authService;
+			ApiUrl = configuration["ApiUrl"] ?? "";
+		}
 
-            var httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(_apiUrl ?? "")
-            };
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            var donors = await httpClient.GetFromJsonAsync<IEnumerable<DonorDto>>($"/api/v1/donors?name={name}");
-            return donors ?? new List<DonorDto>();
-        }
+		public async Task<IEnumerable<DonorDto>> QueryDonors(LoginDto loginDto, string name)
+		{
+			HttpClient httpClient = await CreateClientAsync(loginDto);
+			var donors = await httpClient.GetFromJsonAsync<IEnumerable<DonorDto>>($"/api/v1/donors/byname?name={name}");
+			return donors ?? new List<DonorDto>();
+		}
 
+		private async Task<HttpClient> CreateClientAsync(LoginDto? loginDto)
+		{
+			var httpClient = new HttpClient
+			{
+				BaseAddress = new Uri(ApiUrl ?? "")
+			};
+			if (loginDto != null)
+			{
+				var token = await _authService.GetTokenAsync(loginDto);
+				httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+			}
+			return httpClient;
+		}
 
-    }
+		public async Task<IEnumerable<DonorDto>> QueryDonors(LoginDto loginDto)
+		{
+			var httpClient = await CreateClientAsync(loginDto);
+			var donors = await httpClient.GetFromJsonAsync<IEnumerable<DonorDto>>($"/api/v1/donors");
+			return donors ?? new List<DonorDto>();
+		}
+
+		public async Task<DonorDto?> CreateDonor(LoginDto loginDto, DonorDto donorDto)
+		{
+			try
+			{
+				var httpClient = await CreateClientAsync(loginDto);
+				var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/donors", donorDto);
+				return await responseMessage.Content.ReadFromJsonAsync<DonorDto>();
+			}			
+			catch (JsonException ex)
+			{
+				// Log or handle the JSON parsing exception
+				Console.WriteLine($"Error parsing JSON: {ex.Message}");
+				throw; // Rethrow the exception or handle it according to your application's requirements
+			}
+		}
+
+		public async Task<IEnumerable<CityDto>> QueryCities()
+		{
+			var httpClient = await CreateClientAsync(null);
+			var cities = await httpClient.GetFromJsonAsync<IEnumerable<CityDto>>($"/api/v1/Cities");
+			return cities ?? new List<CityDto>();
+		}
+
+		public async Task<IEnumerable<TownDto>> QueryTowns()
+		{
+			var httpClient = await CreateClientAsync(null);
+			var towns = await httpClient.GetFromJsonAsync<IEnumerable<TownDto>>($"/api/v1/Towns");
+			return towns ?? new List<TownDto>();
+		}
+	}
 }

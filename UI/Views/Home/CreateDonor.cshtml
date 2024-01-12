@@ -1,87 +1,78 @@
-﻿@{
-    ViewData["Title"] = "Create Donor";
+﻿@model DonorDto
+@using Api.Models
+@{
+	ViewData["Title"] = "Create Donor";
+	var branch = ViewData["Branch"] as BranchDto;	
 }
 
-<h2>Donors-Branch Name</h2>
+<h2>Create Donor-@branch?.Name</h2>
 <style>
-    .column {
-        float: left;
-        width: 50%;
-    }
+	.column {
+		float: left;
+		width: 50%;
+	}
 </style>
 
-<form>
-    @Html.AntiForgeryToken()
-    <div class="row">
-        <div class="column">
-            <img src="../Me.jpeg" width="100" height="100" />
-        </div>
-        <div class="column">
-            <div class="form-group">
-                <label class="control-label col-md-6">Donor Name:</label>
-                <div class="col-md-10">
-                    <input class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-6">Blood Type:</label>
-                <div class="col-md-10">
-                    <select class="form-control">
-                    <option value="" disabled selected>Select blood type</option>
-                    <option value="0+">0+</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-6">City:</label>
-                <div class="col-md-10">
-                    <select class="form-control">
-                        <option value="" disabled selected>Select city</option>
-                        <option value="İzmir">İzmir</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-6">Town:</label>
-                <div class="col-md-10">
-                    <select class="form-control">
-                        <option value="" disabled selected>Select town</option>
-                        <option value="Bornova">Bornova</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-6">Phone Number:</label>
-                <div class="col-md-10">
-                    <input class="form-control" />
-                </div>
-            </div>
-        </div>        
-    </div>
-    <!-- Add other donor fields here -->
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
-    </div>
+<form asp-action="CreateDonor">	
+	<div class="row">
+		<div class="column">
+			<img src="../Me.jpeg" width="100" height="100" />
+		</div>
+		<div class="column">
+			<div class="form-group">
+				<label class="control-label col-md-6">Donor Name</label>
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Blood Type</label>
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.BloodType, new List<SelectListItem>
+					{ new SelectListItem {Text="0-",Value="0-"},
+					  new SelectListItem {Text="0+",Value="0+"},
+					  new SelectListItem {Text ="A-",Value="0-"},
+					  new SelectListItem {Text ="A+",Value="A+"},
+					  new SelectListItem {Text="B-",Value="B-"},
+					  new SelectListItem {Text="B+",Value="B+"},
+					  new SelectListItem {Text="AB-",Value="AB-"},
+					  new SelectListItem {Text="AB+",Value="AB+"},
+					},
+					"Please select", new { @class = "form-control" })
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">City</label>
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.CityId, new SelectList((IEnumerable<CityDto>)ViewData["City"], "Id", "Name"), "Select a city", new { @class = "form-control" })					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Town</label>
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.TownId, new SelectList((IEnumerable<TownDto>)ViewData["Town"], "Id", "Name"), "Select a town", new { @class = "form-control" })
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Phone Number</label>
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control" })
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Email</label>
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Add other donor fields here -->
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10 d-grid gap-2 d-md-flex justify-content-md-end">
+			<input type="submit" value="Create" class="btn btn-primary" />
+		</div>
+	</div>
 </form>
 
-<div>
-    <h2>Donor List</h2>
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <!-- Add other donor fields as column headers -->
-            <th></th>
-        </tr>
-        <!-- Sample donor data for demonstration purposes -->
-        <tr>
-            <td>John Doe</td>
-            <!-- Add other donor fields as table data -->
-            <td>
-                <a href="#">Edit</a> |
-                <a href="#">Delete</a>
-            </td>
-        </tr>        
-    </table>
-</div>
+

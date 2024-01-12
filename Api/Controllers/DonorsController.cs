@@ -30,20 +30,21 @@ namespace Api.Controllers
             return await _context.Donors.ToListAsync();
         }
 
-        [HttpGet]
+        // GET: api/Donors/byname
+        [HttpGet("byname")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Donor>>> GetDonors(string name)
+        public async Task<ActionResult<IEnumerable<Donor>>> GetDonorByName(string name)
         {
             return await _context.Donors
                             .Where(d => d.Name.StartsWith(name))
                             .ToListAsync();
         }
 
-
         // GET: api/Donors/5
+
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Donor>> GetDonor(int id)
+        public async Task<ActionResult<Donor>> GetDonorById(int id)
         {
             var donor = await _context.Donors.FindAsync(id);
 
