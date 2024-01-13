@@ -13,11 +13,15 @@
 	}
 </style>
 
-<form asp-action="CreateDonor">	
+<form asp-action="CreateDonor" enctype="multipart/form-data">
 	<div class="row">
-		<div class="column">
-			<img src="../Me.jpeg" width="100" height="100" />
+		<!-- View -->
+		<div class="form-group">
+			<label asp-for="Image">Upload a Photo:</label>			
+			<input asp-for="Photo" />
+			
 		</div>
+
 		<div class="column">
 			<div class="form-group">
 				<label class="control-label col-md-6">Donor Name</label>

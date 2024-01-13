@@ -1,92 +1,100 @@
-﻿@{
-    ViewData["Title"] = "Request Blood";
+﻿@using Api.Models
+@model BloodRequestDto
+@{
+	ViewData["Title"] = "Request Blood";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <style>
-    .column {
-        float: left;
-        width: 50%;
-    }
+	.column {
+		float: left;
+		width: 50%;
+	}
 </style>
 <hr />
 <body>
-    <form>
-        @Html.AntiForgeryToken()
-        <div class="row">
-            <div class="column">
-                <div class="form-group">
-                    <label class="control-label col-md-6">Requestor</label>
-                    <div class="col-md-10">
-                        <input class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-6">Blood Type:</label>
-                    <div class="col-md-10">
-                        <select class="form-control">
-                            <option value="" disabled selected>Select blood type</option>
-                            <option value="0+">0+</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-6">Email</label>
-                    <div class="col-md-10">
-                        <input class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-6">Number Of Units</label>
-                    <div class="col-md-10">
-                        <input class="form-control" />
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="form-group">
-                    <label class="control-label col-md-6">City:</label>
-                    <div class="col-md-10">
-                        <select class="form-control">
-                            <option value="" disabled selected>Select city</option>
-                            <option value="İzmir">İzmir</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-6">Town:</label>
-                    <div class="col-md-10">
-                        <select class="form-control">
-                            <option value="" disabled selected>Select town</option>
-                            <option value="Bornova">Bornova</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-6">Duration Of Search(days)</label>
-                    <div class="col-md-10">
-                        <input class="form-control" />
-                    </div>
-                </div>          
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-6">Reason</label>
-            <div class="col-md-10">
-                <textarea cols="20" rows="5" class="form-control"></textarea>
-            </div>
-        </div>        
-    </form>
-</body>
-<hr />
-<body>
-    <!-- Add other donor fields here -->
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Send" class="btn btn-primary" />
-        </div>
-    </div>
+	<form asp-action="RequestBlood">
+		<div class="row">
+			<div class="column">
+				<div class="form-group">
+					<label class="control-label col-md-6">Requestor</label>
+					<div class="col-md-10">
+						@Html.TextBoxFor(m => m.Requester, new { @class = "form-control" })
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-6">Blood Type:</label>
+					<div class="col-md-10">
+						@Html.DropDownListFor(m => m.BloodType, new List<SelectListItem>
+						{
+						new SelectListItem {Text="0-",Value="0-"},
+						new SelectListItem {Text="0+",Value="0+"},
+						new SelectListItem {Text ="A-",Value="0-"},
+						new SelectListItem {Text ="A+",Value="A+"},
+						new SelectListItem {Text="B-",Value="B-"},
+						new SelectListItem {Text="B+",Value="B+"},
+						new SelectListItem {Text="AB-",Value="AB-"},
+						new SelectListItem {Text="AB+",Value="AB+"},
+						}, "Please select", new { @class = "form-control" })
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Email</label>
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Number Of Units</label>
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.NoOfUnits, new { @class = "form-control" })
+				</div>
+			</div>
+		</div>
+		<div class="column">
+			<div class="form-group">
+				<label class="control-label col-md-6">City:</label>
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.CityId, new SelectList((IEnumerable<CityDto>)ViewData["City"], "Id", "Name"), "Select a city", new { @class = "form-control" })
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Town:</label>
+				<div class="col-md-10">
+					@Html.DropDownListFor(m => m.TownId, new SelectList((IEnumerable<TownDto>)ViewData["Town"], "Id", "Name"), "Select a town", new { @class = "form-control" })
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-6">Duration Of Search(days)</label>
+				<div class="col-md-10">
+					@Html.TextBoxFor(m => m.DurationOfSearch, new { @class = "form-control" })
+				</div>
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="control-label col-md-6">Reason</label>
+			<div class="col-md-10">
+				@Html.TextBoxFor(m => m.Reason, new { @class = "form-control", @rows = "5", @cols = "20" })
+			</div>
+		</div>
+		<hr />
+		<body>
+			<!-- Add other donor fields here -->
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-10">
+					<input type="submit" value="Send" class="btn btn-primary" />	
+					@if (TempData["testmsg"] != null)
+					{
+						<script type="text/javascript">
+							alert("@TempData["testmsg"]");
+						</script>
+					}
+				</div>
+			</div>
+		</body>
+	</form>
 </body>
 
 

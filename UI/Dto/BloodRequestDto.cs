@@ -15,7 +15,7 @@ namespace Api.Models
         public required int DurationOfSearch { get; set; }
         public required string Reason { get; set; }
         public required DateTime RequestDateTime { get; set; }
-        public required string Status { get; set; }
+        public required string Status { get; set; }=string.Empty;
 
     }
 }

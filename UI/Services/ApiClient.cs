@@ -50,19 +50,19 @@ namespace UI.Services
 
 		public async Task<DonorDto?> CreateDonor(LoginDto loginDto, DonorDto donorDto)
 		{
-			try
-			{
-				var httpClient = await CreateClientAsync(loginDto);
-				var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/donors", donorDto);
-				return await responseMessage.Content.ReadFromJsonAsync<DonorDto>();
-			}			
-			catch (JsonException ex)
-			{
-				// Log or handle the JSON parsing exception
-				Console.WriteLine($"Error parsing JSON: {ex.Message}");
-				throw; // Rethrow the exception or handle it according to your application's requirements
-			}
+			var httpClient = await CreateClientAsync(loginDto);
+			var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/donors", donorDto);
+			responseMessage.EnsureSuccessStatusCode();
+			return await responseMessage.Content.ReadFromJsonAsync<DonorDto>();
 		}
+
+		public async Task<DonationDto?> CreateDonation(LoginDto loginDto, DonationDto donationDto)
+		{
+			var httpClient= await CreateClientAsync(loginDto);
+			var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/donations", donationDto);
+            responseMessage.EnsureSuccessStatusCode();
+			return await responseMessage.Content.ReadFromJsonAsync<DonationDto>();
+        }
 
 		public async Task<IEnumerable<CityDto>> QueryCities()
 		{
@@ -77,5 +77,13 @@ namespace UI.Services
 			var towns = await httpClient.GetFromJsonAsync<IEnumerable<TownDto>>($"/api/v1/Towns");
 			return towns ?? new List<TownDto>();
 		}
-	}
+
+        public async Task<BloodRequestDto?> CreateRequest(LoginDto loginDto, BloodRequestDto bloodRequestDto)
+        {
+            var httpClient = await CreateClientAsync(loginDto);
+            var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/bloodrequests", bloodRequestDto);
+            responseMessage.EnsureSuccessStatusCode();
+            return await responseMessage.Content.ReadFromJsonAsync<BloodRequestDto>();
+        }
+    }
 }

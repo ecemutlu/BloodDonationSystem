@@ -1,10 +1,10 @@
-﻿@using Api.Models
+﻿@model DonationDto
+@using Api.Models
 
 @{
     ViewData["Title"] = "Add Blood";
     var branch = ViewData["Branch"] as BranchDto;
 }
-
 <div class="row">
     <div class="col-md-4">
         <h2>@ViewData["Title"]</h2>
@@ -14,25 +14,33 @@
     </div>
 </div>
 
-<form>
+<form asp-action="AddBlood">    
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">Donor Name</label>
                 <select id="donorSelect" class="form-control form-select"></select>
+                @Html.HiddenFor(m => m.DonorId, new { @id="donorId"})
             </div>
+            <!-- Your existing form fields here -->
             <div class="form-group">
-                <label class="control-label">Blood Type</label>
-                <input disabled id="bloodType" class="form-control" />
+                <label class="control-label">Blood Type</label> 
+                <div id="bloodTypeView"></div>
+                @Html.HiddenFor(m => m.BloodType, new { @id = "bloodType"})
             </div>
             <div class="form-group">
                 <label class="control-label">Donation Date</label>
-                <div>@DateTime.Now.ToString("dd.MM.yyyy HH:mm")</div>
+                <div>@DateTime.Now.ToString("dd.MM.yyyy HH:mm")</div>                
             </div>
             <div class="form-group">
                 <label class="control-label">Units</label>
-                <input disabled id="unitsInput" class="form-control" />
+                @Html.TextBoxFor(m => m.NoOfUnits, new { @class = "form-control" })
             </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="submit" class="btn btn-primary" onclick="">Add</button>
         </div>
     </div>
 </form>
@@ -60,9 +68,11 @@
 
 			$('#donorSelect').on('select2:select', function (e) {
 				var data = e.params.data;
+                $('#bloodTypeView').text(data.bloodType);
 				$('#bloodType').val(data.bloodType);
-
-			});
+                $('#donorId').val(data.id);
+            });
+            
 			
 		});
 

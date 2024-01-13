@@ -97,7 +97,7 @@ namespace Api.Controllers
             _context.Donors.Add(donor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDonor", new { id = donor.Id }, donor);
+            return CreatedAtAction("GetDonorById", new { id = donor.Id }, donor);
         }
 
         // DELETE: api/Donors/5
