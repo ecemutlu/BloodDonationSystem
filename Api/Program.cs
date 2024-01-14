@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddTransient<SendgridEmailSender>();
+builder.Services.Configure<SendgridOptions>(builder.Configuration.GetRequiredSection(SendgridOptions.SECTION_NAME));
 builder.Services.AddControllers();
 
 var connString = builder.Configuration.GetConnectionString("Default");
