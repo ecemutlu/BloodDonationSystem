@@ -17,14 +17,14 @@ namespace UI.Controllers
 		private readonly ApiClient _apiClient;
 		private readonly BranchDto _branch;
 		private readonly LoginDto _loginDto;
-		private readonly IWebHostEnvironment _environment;
-		public HomeController(ApiClient apiClient, ILogger<HomeController> logger, MyBranch myBranch, IWebHostEnvironment environment)
+		private readonly IConfiguration _configuration;
+		public HomeController(ApiClient apiClient, ILogger<HomeController> logger, MyBranch myBranch, IConfiguration configuration)
 		{
 			_apiClient = apiClient;
 			_logger = logger;
 			_branch = myBranch.Branch;
 			_loginDto = myBranch.GetLoginInfo();
-			_environment = environment;
+			_configuration = configuration;
 		}
 		[HttpGet]
 		public async Task<IActionResult> CreateDonor()
@@ -41,19 +41,38 @@ namespace UI.Controllers
 		public async Task<IActionResult> CreateDonor([Bind("Name,CityId,TownId,PhoneNo,Email,BloodType,Photo")] DonorDto donor)
 		{
 			ViewData["Branch"] = _branch;
+			ViewData["imgPrefix"] = _configuration["CDNPrefix"];
+			ViewData["Branch"] = _branch;
+			IEnumerable<CityDto> cities = await _apiClient.QueryCities();
+			ViewData["City"] = cities;
+			IEnumerable<TownDto> towns = await _apiClient.QueryTowns();
+			ViewData["Town"] = towns;
 			try
 			{
 				if (ModelState.IsValid)
-				{					
-					var imagePath = Path.Combine(_environment.WebRootPath, "Pictures");
-					var pickedImage = Directory.GetFiles(imagePath).Select(Path.GetFileName);
-					ViewData["Image"] = pickedImage;
-					
+				{
 					var newDonor = await _apiClient.CreateDonor(_loginDto, donor);
-					return RedirectToAction(nameof(ListDonors));
+
+					if (donor.Photo == null)
+						return View(newDonor);
+
+
+					var photoDto = new PhotoDto
+					{
+						DonorId = newDonor!.Id,
+						FileExtension = Path.GetExtension(donor.Photo.FileName),
+						Content = []
+					};
+					using (var ms = new MemoryStream())
+					{
+						donor.Photo.CopyTo(ms);
+						photoDto.Content = ms.ToArray();
+					}
+					newDonor.Image = await _apiClient.UploadPhoto(_loginDto, photoDto);
+					return View(newDonor);
 				}
 			}
-			catch (DbUpdateException /* ex */)
+			catch (Exception /* ex */)
 			{
 				ModelState.AddModelError("", "Unable to save changes. " +
 					"Try again, and if the problem persists " +
@@ -62,6 +81,66 @@ namespace UI.Controllers
 
 			return View(donor);
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> EditDonor(int id)
+		{
+			ViewData["Branch"] = _branch;
+			ViewData["imgPrefix"] = _configuration["CDNPrefix"];
+			ViewData["Branch"] = _branch;
+			IEnumerable<CityDto> cities = await _apiClient.QueryCities();
+			ViewData["City"] = cities;
+			IEnumerable<TownDto> towns = await _apiClient.QueryTowns();
+			ViewData["Town"] = towns;
+			var donor = await _apiClient.GetDonor(_loginDto, id);
+			return View(donor);
+		}
+		[HttpPost]
+		public async Task<IActionResult> EditDonor([Bind("Name,CityId,TownId,PhoneNo,Email,BloodType,Photo")] DonorDto donor)
+		{
+			ViewData["Branch"] = _branch;
+			ViewData["imgPrefix"] = _configuration["CDNPrefix"];
+			ViewData["Branch"] = _branch;
+			IEnumerable<CityDto> cities = await _apiClient.QueryCities();
+			ViewData["City"] = cities;
+			IEnumerable<TownDto> towns = await _apiClient.QueryTowns();
+			ViewData["Town"] = towns;
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					await _apiClient.UpdateDonor(_loginDto,donor.Id, donor);
+
+					if (donor.Photo == null)
+						return View(donor);
+
+
+					var photoDto = new PhotoDto
+					{
+						DonorId = donor!.Id,
+						FileExtension = Path.GetExtension(donor.Photo.FileName),
+						Content = []
+					};
+					using (var ms = new MemoryStream())
+					{
+						donor.Photo.CopyTo(ms);
+						photoDto.Content = ms.ToArray();
+					}
+					donor.Image = await _apiClient.UploadPhoto(_loginDto, photoDto);
+					return RedirectToAction("ListDonors");
+				}
+			}
+			catch (Exception /* ex */)
+			{
+				ModelState.AddModelError("", "Unable to save changes. " +
+					"Try again, and if the problem persists " +
+					"see your system administrator.");
+			}
+
+			return View(donor);
+		}
+
+
 		[HttpGet]
 		public async Task<IActionResult> ListDonors()
 		{
@@ -89,7 +168,7 @@ namespace UI.Controllers
 				if (ModelState.IsValid)
 				{
 					var newRequest = await _apiClient.CreateRequest(_loginDto, bloodRequest);
-					TempData["testmsg"] = "Request successfully sent!";												
+					TempData["testmsg"] = "Request successfully sent!";
 				}
 				ViewData["Branch"] = _branch;
 				IEnumerable<CityDto> cities = await _apiClient.QueryCities();

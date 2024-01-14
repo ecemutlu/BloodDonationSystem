@@ -27,7 +27,7 @@
                     <td>@donor.PhoneNo</td>
                     <td>@donor.Email</td>
                     <td>
-                        <a href="#">Edit</a>
+                        @Html.ActionLink("Edit","EditDonor","Home",new { id= donor.Id})
                         <a href="#">Delete</a>
                     </td>
                 </tr>

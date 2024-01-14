@@ -1,12 +1,12 @@
 ﻿@model DonorDto
 @using Api.Models
 @{
-	ViewData["Title"] = "Create Donor";
+	ViewData["Title"] = "Edit Donor";
 	var branch = ViewData["Branch"] as BranchDto;
 	var imgUrl = string.IsNullOrEmpty(Model?.Image) ? "" : ViewData["imgPrefix"] + "/" + Model?.Image;
 }
 
-<h2>Create Donor-@branch?.Name</h2>
+<h2>Edit Donor-@branch?.Name</h2>
 <style>
 	.column {
 		float: left;
@@ -14,19 +14,14 @@
 	}
 </style>
 
-<form asp-action="CreateDonor" enctype="multipart/form-data">
-	<div class="row">
-		@if (!string.IsNullOrEmpty(imgUrl))
-		{
-			<img src="@imgUrl" width="30"/>
-		}
-		<!-- View -->
-		<div class="form-group">
-			<label asp-for="Image">Upload a Photo:</label>			
-			<input asp-for="Photo" accept=".png,.jpg,.jpeg" />
-			
+<form asp-action="EditDonor" enctype="multipart/form-data">
+	<div class="row ">
+		<div class="column">
+			@if (!string.IsNullOrEmpty(imgUrl))
+			{
+				<img src="@imgUrl" style="max-width:200px"/>
+			}			
 		</div>
-
 		<div class="column">
 			<div class="form-group">
 				<label class="control-label col-md-6">Donor Name</label>
@@ -79,7 +74,7 @@
 	<!-- Add other donor fields here -->
 	<div class="form-group">
 		<div class="col-md-offset-2 col-md-10 d-grid gap-2 d-md-flex justify-content-md-end">
-			<input type="submit" value="Create" class="btn btn-primary" />
+			<input type="submit" value="Edit" class="btn btn-primary" />
 		</div>
 	</div>
 </form>

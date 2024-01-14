@@ -27,6 +27,20 @@ namespace UI.Services
 			return donors ?? new List<DonorDto>();
 		}
 
+		public async Task<DonorDto?> GetDonor(LoginDto loginDto, int id)
+		{
+			HttpClient httpClient = await CreateClientAsync(loginDto);
+			return await httpClient.GetFromJsonAsync<DonorDto>($"/api/v1/donors/{id}");
+		}
+
+		public async Task UpdateDonor(LoginDto loginDto, int id, DonorDto donor)
+		{
+			var httpClient = await CreateClientAsync(loginDto);
+			var responseMessage = await httpClient.PutAsJsonAsync($"/api/v1/donors/{id}", donor);
+			responseMessage.EnsureSuccessStatusCode();
+			await responseMessage.Content.ReadFromJsonAsync<DonorDto>();
+		}
+
 		private async Task<HttpClient> CreateClientAsync(LoginDto? loginDto)
 		{
 			var httpClient = new HttpClient
@@ -58,11 +72,11 @@ namespace UI.Services
 
 		public async Task<DonationDto?> CreateDonation(LoginDto loginDto, DonationDto donationDto)
 		{
-			var httpClient= await CreateClientAsync(loginDto);
+			var httpClient = await CreateClientAsync(loginDto);
 			var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/donations", donationDto);
-            responseMessage.EnsureSuccessStatusCode();
+			responseMessage.EnsureSuccessStatusCode();
 			return await responseMessage.Content.ReadFromJsonAsync<DonationDto>();
-        }
+		}
 
 		public async Task<IEnumerable<CityDto>> QueryCities()
 		{
@@ -78,12 +92,19 @@ namespace UI.Services
 			return towns ?? new List<TownDto>();
 		}
 
-        public async Task<BloodRequestDto?> CreateRequest(LoginDto loginDto, BloodRequestDto bloodRequestDto)
-        {
-            var httpClient = await CreateClientAsync(loginDto);
-            var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/bloodrequests", bloodRequestDto);
-            responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<BloodRequestDto>();
-        }
-    }
+		public async Task<BloodRequestDto?> CreateRequest(LoginDto loginDto, BloodRequestDto bloodRequestDto)
+		{
+			var httpClient = await CreateClientAsync(loginDto);
+			var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/bloodrequests", bloodRequestDto);
+			responseMessage.EnsureSuccessStatusCode();
+			return await responseMessage.Content.ReadFromJsonAsync<BloodRequestDto>();
+		}
+		public async Task<string?> UploadPhoto(LoginDto loginDto, PhotoDto photoDto)
+		{
+			var httpClient = await CreateClientAsync(loginDto);
+			var responseMessage = await httpClient.PostAsJsonAsync($"/api/v1/donors/postphoto", photoDto);
+			responseMessage.EnsureSuccessStatusCode();
+			return await responseMessage.Content.ReadAsStringAsync();
+		}
+	}
 }
