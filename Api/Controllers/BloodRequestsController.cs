@@ -126,7 +126,7 @@ namespace Api.Controllers
 			var request = await _context.BloodRequests.FirstOrDefaultAsync(e => e.Id == id);
 			if (request == null)
 				return NotFound();
-			if (!string.IsNullOrEmpty(request.Status))
+			if (!string.IsNullOrWhiteSpace(request.Status))
 				return new ActionResult<RequestStatusDto>(new RequestStatusDto { Status = request.Status, Message = "Already completed" });
 			if (request.RequestDateTime.AddDays(request.DurationOfSearch) < DateTime.Now)
 			{
@@ -141,7 +141,7 @@ namespace Api.Controllers
 			var sum = 0;
 			foreach (var d in activeDonations)
 			{
-				var amount = Math.Max(request.NoOfUnits, d.NoOfUnits);
+				var amount = Math.Min(request.NoOfUnits, d.NoOfUnits);
 				sum += amount;
 				await _context.BloodRequestDonation.AddAsync(new BloodRequestDonation
 				{

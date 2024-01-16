@@ -69,8 +69,8 @@ namespace UI.Controllers
                         photoDto.Content = ms.ToArray();
                     }
                     newDonor.Image = await _apiClient.UploadPhoto(_loginDto, photoDto);
-                    return View(newDonor);
-                }
+					return RedirectToAction("ListDonors");
+				}
             }
             catch (Exception /* ex */)
             {
