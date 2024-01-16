@@ -9,8 +9,8 @@ Assumptions:
 Assumes that Azure CDN is set up for efficiently storing and serving donor photos.
 Assumes a working email configuration for sending notifications.
 Assumes the availability of email templates for donor notifications and requester notifications.
-Assumes proper security measures (e.g., HTTPS, authentication) are implemented for both API and UI.
-Assumes a well-designed database schema and that database operations are handled by the Entity Framework or a similar ORM.
+Assumes proper security measures are implemented for both API and UI.
+Assumes a well-designed database schema and that database operations are handled by the Entity Framework.
 
 Issues Encountered:
 
