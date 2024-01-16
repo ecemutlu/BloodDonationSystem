@@ -9,6 +9,9 @@ using Api.Db;
 using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Api.Services;
+using Api.Dto;
+using Microsoft.Extensions.Hosting;
+using System.Reflection.Metadata;
 
 namespace Api.Controllers
 {
@@ -118,15 +121,56 @@ namespace Api.Controllers
 
 		[HttpPost("check/{id}")]
 		//[Authorize]
-		public async Task<ActionResult<bool>> CheckRequest(int id)
+		public async Task<ActionResult<RequestStatusDto>> CheckRequest(int id)
 		{
 			var request = await _context.BloodRequests.FirstOrDefaultAsync(e => e.Id == id);
-			if (request == null) 
+			if (request == null)
 				return NotFound();
+			if (!string.IsNullOrEmpty(request.Status))
+				return new ActionResult<RequestStatusDto>(new RequestStatusDto { Status = request.Status, Message = "Already completed" });
+			if (request.RequestDateTime.AddDays(request.DurationOfSearch) < DateTime.Now)
+			{
+				request.Status = "Expired";
+				_context.Entry(request).State = EntityState.Modified;
+				await _context.SaveChangesAsync();
+				return new ActionResult<RequestStatusDto>(new RequestStatusDto { Status = request.Status, Message = "Request expired" });
+			}
+			var activeDonations = _context.Donations.Where(d => d.BloodType == request.BloodType && !_context.BloodRequestDonation.Any(brd => brd.DonationId == d.Id));
 
-			await _sendgridEmailSender.SendEmailAsync(request.Email, "Your blood request", "test");
+			var donors = new List<Donor>();
+			var sum = 0;
+			foreach (var d in activeDonations)
+			{
+				var amount = Math.Max(request.NoOfUnits, d.NoOfUnits);
+				sum += amount;
+				await _context.BloodRequestDonation.AddAsync(new BloodRequestDonation
+				{
+					BloodRequestId = request.Id,
+					DonationId = d.Id,
+					NoOfUnits = amount,
+					TransactionDateTime = DateTime.Now
+				});
+				var donor = _context.Donors.FirstOrDefault(dn => dn.Id == d.DonorId);
+				if (donor != null && !string.IsNullOrEmpty(donor.Email))
+					donors.Add(donor);
 
-			return Ok(true);
+				if (sum >= request.NoOfUnits)
+					break;
+			}
+			if (sum == request.NoOfUnits)
+			{
+				request.Status = "Done";
+				_context.Entry(request).State |= EntityState.Modified;
+				await _context.SaveChangesAsync();
+				foreach (var donor in donors)
+				{
+					await _sendgridEmailSender.SendEmailAsync(donor.Email, "Your blood donation", $"Your blood has been donated at {DateTime.Now}");
+				}
+				await _sendgridEmailSender.SendEmailAsync(request.Email, "Your blood request", $"Your blood has been processed and fulfilled at {DateTime.Now}");
+				return new ActionResult<RequestStatusDto>(new RequestStatusDto { Status = request.Status, Message = "Completed" });
+			}
+			await _sendgridEmailSender.SendEmailAsync(request.Email, "Your blood request", $"Sorry to inform that there is no suitable blood. {DateTime.Now}");
+			return new ActionResult<RequestStatusDto>(new RequestStatusDto { Status = request.Status, Message = "Not able to fulfill" });
 		}
 
 	}

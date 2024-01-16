@@ -1,8 +1,5 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Xml.Linq;
-using Api.Models;
+﻿using Api.Models;
+using Microsoft.AspNetCore.Mvc;
 using UI.Dto;
 
 namespace UI.Services
@@ -57,9 +54,9 @@ namespace UI.Services
 
 		public async Task<IEnumerable<DonorDto>> QueryDonors(LoginDto loginDto)
 		{
-			var httpClient = await CreateClientAsync(loginDto);
-			var donors = await httpClient.GetFromJsonAsync<IEnumerable<DonorDto>>($"/api/v1/donors");
-			return donors ?? new List<DonorDto>();
+			var httpClient = await CreateClientAsync(loginDto);            
+            var donors = await httpClient.GetFromJsonAsync<IEnumerable<DonorDto>>($"/api/v1/donors");
+            return donors ?? new List<DonorDto>();
 		}
 
 		public async Task<DonorDto?> CreateDonor(LoginDto loginDto, DonorDto donorDto)

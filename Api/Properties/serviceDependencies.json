@@ -1,7 +1,28 @@
 {
   "dependencies": {
     "secrets1": {
-      "type": "secrets"
+      "type": "secrets",
+      "connectionId": null
+    },
+    "secrets2": {
+      "type": "secrets",
+      "connectionId": "VaultUri"
+    },
+    "apis1": {
+      "type": "apis"
+    },
+    "secrets3": {
+      "type": "secrets",
+      "connectionId": "VaultUri",
+      "dynamicId": null
+    },
+    "identityapp1": {
+      "type": "identityapp"
+    },
+    "storage1": {
+      "type": "storage",
+      "connectionId": "BlobStorage:ConnectionString",
+      "dynamicId": null
     },
     "mssql1": {
       "type": "mssql",

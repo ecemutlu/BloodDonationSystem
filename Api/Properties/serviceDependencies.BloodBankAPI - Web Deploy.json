@@ -1,0 +1,36 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/BloodbankApiApi/apis/BloodbankApi",
+      "type": "apis.azure"
+    },
+    "secrets3": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/BloodbankApi/providers/Microsoft.ServiceLinker/linkers/VaultUri_334E948146",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/BloodbankApiVault",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUri",
+      "dynamicId": null
+    },
+    "identityapp1": {
+      "connectionInfo": "App registration: BlooadbankApi, Tenant: olgu.com.tr (olgu.com.tr - Microsoft Entra ID)",
+      "type": "identityapp.default"
+    },
+    "storage1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/BloodbankApi/providers/Microsoft.ServiceLinker/linkers/BlobStorageConnectionString_CDA648E7C9, /subscriptions/3608223f-1477-4006-a3d8-888460830c51/resourcegroups/test/providers/Microsoft.Web/sites/BloodbankApi/providers/Microsoft.ServiceLinker/linkers/BlobStorageConnectionString_00362AF033",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/test20240101",
+      "type": "storage.azure",
+      "connectionId": "BlobStorage:ConnectionString",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/BloodbankApi/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDefault_084DC39A41",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/test20240101/databases/bloodbank",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:Default",
+      "dynamicId": null
+    }
+  }
+}

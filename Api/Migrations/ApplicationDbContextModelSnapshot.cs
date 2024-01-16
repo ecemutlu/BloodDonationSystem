@@ -67,7 +67,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BloodRequests");
+                    b.ToTable("BloodRequests", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.BloodRequestDonation", b =>
@@ -86,7 +86,7 @@ namespace Api.Migrations
 
                     b.HasKey("BloodRequestId", "DonationId");
 
-                    b.ToTable("BloodRequestDonation");
+                    b.ToTable("BloodRequestDonation", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Branch", b =>
@@ -117,7 +117,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branches", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.City", b =>
@@ -134,7 +134,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Donation", b =>
@@ -163,7 +163,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Donations");
+                    b.ToTable("Donations", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Donor", b =>
@@ -201,7 +201,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Donors");
+                    b.ToTable("Donors", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Town", b =>
@@ -221,7 +221,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Towns");
+                    b.ToTable("Towns", (string)null);
                 });
 #pragma warning restore 612, 618
         }

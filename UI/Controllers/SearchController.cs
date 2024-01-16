@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using UI.Services;
+using UI.Dto;
 
 namespace UI.Controllers
 {
@@ -20,8 +21,8 @@ namespace UI.Controllers
             _myBranch = myBranch;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<DonorDto>> GetDonors()
+        [HttpGet("page")]
+        public async Task<IEnumerable<DonorDto>> GetDonors([FromQuery]PageRequest pageRequest)
         {
             return await _apiClient.QueryDonors(_myBranch.GetLoginInfo());
         }

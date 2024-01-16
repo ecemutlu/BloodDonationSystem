@@ -6,8 +6,15 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Api.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Identity.Web;
+using Azure.Identity;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var keyVaultEndpoint = new Uri(builder.Configuration["VaultUri"] ?? "");
+builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 
 // Add services to the container.
 
@@ -32,8 +39,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true
         };
     });
+ //   .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -65,14 +74,24 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
+
+//builder.Services.AddAzureClients(clientBuilder =>
+//{
+//    clientBuilder.AddBlobServiceClient(builder.Configuration["BlobStorage:ConnectionString:blob"], preferMsi: true);
+//    clientBuilder.AddQueueServiceClient(builder.Configuration["BlobStorage:ConnectionString:queue"], preferMsi: true);
+//});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 
