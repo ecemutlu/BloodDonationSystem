@@ -1,4 +1,6 @@
 # BloodDonation
+ER Diagram:![ERBloodDonation](https://github.com/ecemutlu/BloodDonationSystem/assets/109739236/55256414-9494-423e-9178-a45b28f314ba)
+
 Donor information is captured through the UI, stored in the database via the API.
 Blood donations are recorded, and donors are notified through emails using the EmailService.
 Requesters submit blood requests through the UI, which are processed by the API.
